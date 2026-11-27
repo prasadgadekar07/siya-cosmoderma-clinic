@@ -148,6 +148,7 @@
           <option value="Pending">Pending</option>
           <option value="Confirmed">Confirmed</option>
           <option value="Completed">Completed</option>
+          <option value="Cancelled">Cancelled</option>
         </select>
       </div>
 
@@ -307,21 +308,33 @@
     </div>
 
     <!-- Rx Archive Panel -->
-    <div id="adminPanel-rxArchive" class="hidden no-print">
+    <div id="adminPanel-rxArchive" class="hidden space-y-5 no-print">
+      <div class="rounded-[1.75rem] bg-white border border-stoneBorder p-5 shadow-card">
+        <input
+          type="text"
+          id="rxArchiveSearchInput"
+          oninput="renderRxArchive()"
+          placeholder="Search saved prescriptions by patient name, phone, diagnosis, or #RX ID..."
+          class="w-full px-4 py-3 rounded-xl bg-ivorySilk border border-stoneBorder text-obsidian text-sm focus:outline-none focus:border-gold"
+        />
+      </div>
+
       <div class="rounded-[1.75rem] bg-white border border-stoneBorder shadow-luxury overflow-hidden">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr class="bg-obsidian text-gold-light text-[10px] uppercase tracking-[0.18em]">
-              <th class="py-4 px-5">Rx ID</th>
-              <th class="py-4 px-5">Date</th>
-              <th class="py-4 px-5">Patient</th>
-              <th class="py-4 px-5">Diagnosis</th>
-              <th class="py-4 px-5">Medications</th>
-              <th class="py-4 px-5 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="rxArchiveTbody" class="divide-y divide-stoneBorder text-xs sm:text-sm"></tbody>
-        </table>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-obsidian text-gold-light text-[10px] uppercase tracking-[0.18em]">
+                <th class="py-4 px-5">Rx ID</th>
+                <th class="py-4 px-5">Date</th>
+                <th class="py-4 px-5">Patient</th>
+                <th class="py-4 px-5">Diagnosis</th>
+                <th class="py-4 px-5">Medications</th>
+                <th class="py-4 px-5 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="rxArchiveTbody" class="divide-y divide-stoneBorder text-xs sm:text-sm"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -349,6 +362,62 @@
           <button type="submit" class="px-5 py-2.5 rounded-full bg-obsidian text-gold-light text-xs font-semibold">Add to Queue</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ==================== VIEW SAVED RX DETAILS MODAL ==================== -->
+  <div id="rxDetailsModal" class="hidden fixed inset-0 z-50 bg-obsidian/70 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+    <div class="max-w-2xl w-full rounded-[2rem] bg-white border border-gold/50 shadow-2xl overflow-hidden">
+      <div class="bg-obsidian text-ivorySilk px-6 py-5 flex items-center justify-between border-b border-gold/30">
+        <div>
+          <span id="detailRxBadge" class="text-[10px] uppercase tracking-[0.2em] text-gold-light font-mono font-bold block">#RX-0000</span>
+          <h3 id="detailPatientTitle" class="font-display text-2xl sm:text-3xl text-white mt-0.5">Patient Name</h3>
+        </div>
+        <button type="button" onclick="closeRxDetailsModal()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-6 sm:p-7 space-y-5 max-h-[78vh] overflow-y-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="p-3.5 rounded-xl bg-ivorySilk border border-stoneBorder">
+            <span class="text-[10px] uppercase tracking-wider text-mutedInk block">Last Visit Date</span>
+            <strong id="detailVisitDate" class="text-obsidian text-sm font-mono mt-0.5 block">—</strong>
+          </div>
+          <div class="p-3.5 rounded-xl bg-ivorySilk border border-stoneBorder">
+            <span class="text-[10px] uppercase tracking-wider text-mutedInk block">Age / Gender &amp; Phone</span>
+            <strong id="detailPatientMeta" class="text-obsidian text-xs mt-0.5 block">—</strong>
+          </div>
+          <div class="p-3.5 rounded-xl bg-ivorySilk border border-stoneBorder">
+            <span class="text-[10px] uppercase tracking-wider text-mutedInk block">Next Follow-Up</span>
+            <strong id="detailFollowUp" class="text-gold-bronze text-sm font-semibold mt-0.5 block">—</strong>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-alabasterCard/70 border border-stoneBorder">
+          <span class="text-[10px] uppercase tracking-wider text-gold-bronze font-semibold block">Diagnosis / Condition (आजार व निदान)</span>
+          <p id="detailDiagnosis" class="text-sm font-semibold text-obsidian mt-1">—</p>
+        </div>
+
+        <div class="space-y-2.5">
+          <h4 class="text-xs uppercase tracking-wider text-obsidian font-bold">Last Prescribed Medicines &amp; Tablets</h4>
+          <div id="detailMedList" class="space-y-2"></div>
+        </div>
+
+        <div id="detailAdviceBox" class="p-4 rounded-2xl bg-ivorySilk border border-stoneBorder text-xs">
+          <span class="text-[10px] uppercase tracking-wider text-mutedInk font-semibold block">Doctor’s Advice &amp; Care Instructions</span>
+          <p id="detailAdvice" class="text-obsidian mt-1 leading-relaxed">—</p>
+        </div>
+
+        <div class="pt-2 flex flex-wrap justify-end gap-3">
+          <button type="button" id="repeatRxFromModalBtn" class="px-5 py-2.5 rounded-full bg-gold hover:bg-gold-light text-obsidian text-xs font-bold uppercase tracking-wider">
+            Repeat / Load into Rx Studio
+          </button>
+          <button type="button" onclick="closeRxDetailsModal()" class="px-6 py-2.5 rounded-full bg-obsidian text-gold-light border border-gold/40 text-xs font-bold uppercase tracking-wider">
+            Close
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 

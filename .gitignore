@@ -1,0 +1,4 @@
+node_modules/
+clinic.db
+clinic.db-journal
+.env

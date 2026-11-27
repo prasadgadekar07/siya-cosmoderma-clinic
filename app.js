@@ -154,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshAdminDashboard();
   }
 
+  syncClinicDataFromServer();
   if (window.lucide) lucide.createIcons();
 });
 
@@ -358,23 +359,18 @@ function runAiScanAfterInput(activeLabel) {
   const img = document.getElementById('aiUploadedImg');
 
   if (!hasFaceOrPhotoInput) {
-    if (badge) {
-      badge.innerHTML = `<span class="text-amber-300">PLEASE UPLOAD PHOTO OR START LIVE CAMERA</span><span>LOCKED</span>`;
-    }
+    if (badge) badge.innerHTML = `<span class="text-amber-300">PLEASE UPLOAD PHOTO OR START LIVE CAMERA</span><span>LOCKED</span>`;
     return;
   }
 
-  if (badge) {
-    badge.innerHTML = `<span class="animate-pulse">${activeLabel}</span><span class="text-sky-300">SCANNING</span>`;
-  }
+  if (badge) badge.innerHTML = `<span class="animate-pulse">${activeLabel}</span><span class="text-sky-300">SCANNING</span>`;
 
   setTimeout(() => {
     if (video && !video.classList.contains('hidden') && video.videoWidth > 0 && img) {
       const snapCanvas = document.createElement('canvas');
       snapCanvas.width = video.videoWidth;
       snapCanvas.height = video.videoHeight;
-      const snapCtx = snapCanvas.getContext('2d');
-      snapCtx.drawImage(video, 0, 0, snapCanvas.width, snapCanvas.height);
+      snapCanvas.getContext('2d').drawImage(video, 0, 0, snapCanvas.width, snapCanvas.height);
       img.src = snapCanvas.toDataURL('image/png');
       img.classList.remove('hidden');
       video.srcObject = null;
@@ -383,23 +379,38 @@ function runAiScanAfterInput(activeLabel) {
 
     stopAiCameraStream();
 
-    const rand = (min, max) => Math.floor(min + Math.random() * (max - min + 1));
-    const hydration = rand(72, 92);
-    const pigmentation = rand(70, 90);
-    const acne = rand(76, 94);
-    const wrinkles = rand(80, 95);
-    const pores = rand(74, 90);
-    const oil = rand(75, 92);
+    let seed = 82;
+    try {
+      if (img && img.complete && img.naturalWidth > 0) {
+        const c = document.createElement('canvas');
+        c.width = 24;
+        c.height = 24;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0, 24, 24);
+        const data = ctx.getImageData(0, 0, 24, 24).data;
+        let sum = 0;
+        for (let i = 0; i < data.length; i += 4) sum += (data[i] + data[i + 1] + data[i + 2]) / 3;
+        seed = Math.round(sum / (data.length / 4));
+      }
+    } catch (e) {}
+
+    const clamp = (v) => Math.max(68, Math.min(95, Math.round(v)));
+    const hydration = clamp(72 + (seed % 20));
+    const pigmentation = clamp(70 + ((seed * 3) % 21));
+    const acne = clamp(75 + ((seed * 5) % 19));
+    const wrinkles = clamp(78 + ((seed * 7) % 17));
+    const pores = clamp(73 + ((seed * 2) % 19));
+    const oil = clamp(74 + ((seed * 4) % 18));
     const score = Math.round((hydration + pigmentation + acne + wrinkles + pores + oil) / 6);
     const rec = pigmentation < 78
-      ? '07 • Pico-Laser Pigmentation & Rejuvenation'
-      : '03 • Hydra-Infusion Glass Skin Ritual';
+      ? '07 • Pico-Laser Pigmentation & Rejuvenation (Preliminary AI Preview — Clinical Exam by Dr. Vaishnavi Gayake Recommended)'
+      : '03 • Hydra-Infusion Glass Skin Ritual (Preliminary AI Preview — Clinical Exam by Dr. Vaishnavi Gayake Recommended)';
 
     renderAiMetrics({ hydration, pigmentation, acne, wrinkles, pores, oil, score, rec });
     if (badge) {
-      badge.innerHTML = `<span class="text-emerald-300">SCAN COMPLETE • CAMERA OFF</span><span class="text-gold-light">SCORE: ${score}/100</span>`;
+      badge.innerHTML = `<span class="text-emerald-300">PRELIMINARY PREVIEW COMPLETE • CAMERA OFF</span><span class="text-gold-light">SCORE: ${score}/100</span>`;
     }
-  }, 1500);
+  }, 1400);
 }
 
 // ==================== 2. INTERACTIVE LUXURY FACE & TRICHOLOGY ZONE MAP ====================
@@ -530,12 +541,6 @@ function selectSkinStage(idx) {
     b.className = i === idx
       ? 'w-full text-left p-4 rounded-2xl bg-obsidian text-white border border-gold flex items-center gap-4 shadow-lg transition'
       : 'w-full text-left p-4 rounded-2xl glass-luxury border border-stoneBorder hover:border-gold flex items-center gap-4 transition';
-  });
-
-  // Update text color on active vs inactive button
-  skinStagesData.forEach((s, i) => {
-    const b = document.getElementById(`skin-stage-btn-${i}`);
-    if (!b) return;
     const titleEl = b.querySelector('strong');
     const descEl = b.querySelector('span.text-xs');
     if (titleEl) titleEl.className = i === idx ? 'text-gold-light text-sm font-semibold block' : 'text-obsidian text-sm font-semibold block';
@@ -663,11 +668,14 @@ function finalizeLuxuryBooking() {
     return;
   }
 
-  const passId = 'SCH-' + Math.floor(1000 + Math.random() * 9000);
-  latestPassData = { passId, name, phone, protocol: selectedWizardProtocol, date, slot, notes };
+  const existingCount = getAppointments().filter((a) => a.date === date && a.slot === slot && a.status !== 'Cancelled').length;
+  if (existingCount >= 3) {
+    const proceed = confirm(`Note: ${existingCount} consultations are already scheduled for ${date} (${slot}). Do you still want to request a priority slot?`);
+    if (!proceed) return;
+  }
 
-  const list = getAppointments();
-  list.unshift({
+  const passId = 'SCH-' + Math.floor(1000 + Math.random() * 9000);
+  const apptObj = {
     passId,
     name,
     phone,
@@ -677,8 +685,14 @@ function finalizeLuxuryBooking() {
     notes,
     fee: protocolFeeMap[selectedWizardProtocol] || 800,
     status: 'Pending'
-  });
+  };
+
+  latestPassData = apptObj;
+
+  const list = getAppointments();
+  list.unshift(apptObj);
   saveAppointments(list);
+  postAppointmentToServer(apptObj);
 
   document.getElementById('wizPassId').textContent = `#${passId}`;
   document.getElementById('wizPassSummary').innerHTML = `
@@ -736,12 +750,29 @@ function initGsapScrollStorytelling() {
 }
 
 // ==================== ADMIN PORTAL & A4 RX STUDIO (admin.html) ====================
-function handleAdminPinUnlock(e) {
+async function handleAdminPinUnlock(e) {
   e.preventDefault();
-  if (document.getElementById('adminPinInput').value.trim() === '1234') {
+  const pin = document.getElementById('adminPinInput').value.trim();
+  
+
+ let ok = (pin === '1234');
+
+  if (!ok) {
+    try {
+      const res = await fetch('/api/admin/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin })
+      });
+      if (res.ok) ok = true;
+    } catch (err) {}
+  }
+
+  if (ok) {
     document.getElementById('pinErrorMsg').classList.add('hidden');
     document.getElementById('adminPinGate').classList.add('hidden');
     document.getElementById('adminDashboardContent').classList.remove('hidden');
+    await syncClinicDataFromServer();
     refreshAdminDashboard();
     if (window.lucide) lucide.createIcons();
   } else {
@@ -784,17 +815,44 @@ function refreshAdminDashboard() {
   renderRxArchive();
 }
 
+async function updateAppointmentStatus(passId, newStatus) {
+  const list = getAppointments();
+  const idx = list.findIndex((a) => a.passId === passId);
+  if (idx === -1) return;
+  list[idx].status = newStatus;
+  saveAppointments(list);
+  refreshAdminDashboard();
+
+  try {
+    await fetch(`/api/appointments/${encodeURIComponent(passId)}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus })
+    });
+  } catch (e) {}
+}
+
 function renderAdminAppointments() {
   const tbody = document.getElementById('adminAppointmentsTbody');
   if (!tbody) return;
   const q = (document.getElementById('apptSearchInput')?.value || '').toLowerCase();
   const st = document.getElementById('apptStatusFilter')?.value || 'all';
-  const rows = getAppointments().filter((a) => (st === 'all' || a.status === st) && (a.name.toLowerCase().includes(q) || a.phone.toLowerCase().includes(q) || a.passId.toLowerCase().includes(q)));
+  const rows = getAppointments().filter((a) =>
+    (st === 'all' || a.status === st) &&
+    (a.name.toLowerCase().includes(q) || a.phone.toLowerCase().includes(q) || a.passId.toLowerCase().includes(q))
+  );
 
   if (!rows.length) {
     tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-mutedInk italic">No appointments found.</td></tr>`;
     return;
   }
+
+  const statusStyles = {
+    Pending: 'bg-amber-50 text-amber-800 border-amber-300',
+    Confirmed: 'bg-sky-50 text-sky-800 border-sky-300',
+    Completed: 'bg-emerald-50 text-emerald-800 border-emerald-300',
+    Cancelled: 'bg-red-50 text-red-700 border-red-300'
+  };
 
   tbody.innerHTML = rows.map((a) => `
     <tr class="hover:bg-ivorySilk/70">
@@ -803,10 +861,14 @@ function renderAdminAppointments() {
       <td class="py-4 px-5">${escapeHtml(a.protocol)}</td>
       <td class="py-4 px-5">${escapeHtml(a.date)}<div class="text-xs text-mutedInk">${escapeHtml(a.slot)}</div></td>
       <td class="py-4 px-5 font-semibold">₹${(Number(a.fee) || 800).toLocaleString('en-IN')}</td>
-      <td class="py-4 px-5"><span class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-xs font-semibold">${escapeHtml(a.status)}</span></td>
+      <td class="py-4 px-5">
+        <select onchange="updateAppointmentStatus('${escapeHtml(a.passId)}', this.value)" class="px-2.5 py-1 rounded-full border text-xs font-semibold cursor-pointer ${statusStyles[a.status] || statusStyles.Pending}">
+          ${['Pending', 'Confirmed', 'Completed', 'Cancelled'].map((s) => `<option value="${s}" ${a.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+        </select>
+      </td>
       <td class="py-4 px-5 text-right space-x-1">
-        <button type="button" onclick="launchRxForPatient('${a.passId}')" class="px-3 py-1.5 rounded-lg bg-obsidian text-gold-light text-xs font-semibold">Write Rx</button>
-        <button type="button" onclick="deleteAppointment('${a.passId}')" class="px-2.5 py-1.5 rounded-lg text-red-600 hover:bg-red-50 text-xs">Del</button>
+        <button type="button" onclick="launchRxForPatient('${escapeHtml(a.passId)}')" class="px-3 py-1.5 rounded-lg bg-obsidian text-gold-light text-xs font-semibold">Write Rx</button>
+        <button type="button" onclick="deleteAppointment('${escapeHtml(a.passId)}')" class="px-2.5 py-1.5 rounded-lg text-red-600 hover:bg-red-50 text-xs">Del</button>
       </td>
     </tr>
   `).join('');
@@ -815,6 +877,7 @@ function renderAdminAppointments() {
 function deleteAppointment(passId) {
   saveAppointments(getAppointments().filter((a) => a.passId !== passId));
   refreshAdminDashboard();
+  deleteAppointmentOnServer(passId);
 }
 
 function openWalkInModal() { document.getElementById('walkInModal').classList.remove('hidden'); }
@@ -826,9 +889,21 @@ function handleWalkInSubmit(e) {
   const phone = document.getElementById('walkInPhone').value.trim();
   const protocol = document.getElementById('walkInProtocol').value;
   const notes = document.getElementById('walkInNotes').value.trim();
+  const walkInObj = {
+    passId: 'SCH-' + Math.floor(1000 + Math.random() * 9000),
+    name,
+    phone,
+    protocol,
+    date: new Date().toISOString().split('T')[0],
+    slot: 'Walk-In Priority OPD',
+    notes,
+    fee: protocolFeeMap[protocol] || 800,
+    status: 'Confirmed'
+  };
   const list = getAppointments();
-  list.unshift({ passId: 'SCH-' + Math.floor(1000 + Math.random() * 9000), name, phone, protocol, date: new Date().toISOString().split('T')[0], slot: 'Walk-In Priority OPD', notes, fee: protocolFeeMap[protocol] || 800, status: 'Confirmed' });
+  list.unshift(walkInObj);
   saveAppointments(list);
+  postAppointmentToServer(walkInObj);
   e.target.reset();
   closeWalkInModal();
   refreshAdminDashboard();
@@ -856,7 +931,7 @@ function launchRxForPatient(passId) {
   draftMedications = [];
   document.getElementById('rxPatientName').value = appt.name;
   document.getElementById('rxPatientPhone').value = appt.phone;
-  document.getElementById('rxLinkedBooking').value = '#' + appt.passId;
+  if (document.getElementById('rxLinkedBooking')) document.getElementById('rxLinkedBooking').value = '#' + appt.passId;
   document.getElementById('rxDiagnosis').value = appt.protocol;
   switchAdminTab('rxStudio');
   renderComposerMedList();
@@ -913,16 +988,17 @@ function saveAndPrintRx(doPrint) {
     rxId: currentRxId,
     date: new Date().toISOString().split('T')[0],
     patientName,
-    ageGender: document.getElementById('rxAgeGender').value.trim() || '—',
-    phone: document.getElementById('rxPatientPhone').value.trim() || '—',
-    diagnosis: document.getElementById('rxDiagnosis').value.trim() || 'Dermatology Evaluation',
+    ageGender: document.getElementById('rxAgeGender')?.value.trim() || '—',
+    phone: document.getElementById('rxPatientPhone')?.value.trim() || '—',
+    diagnosis: document.getElementById('rxDiagnosis')?.value.trim() || 'Dermatology Evaluation',
     medications: [...draftMedications],
-    advice: document.getElementById('rxAdvice').value.trim(),
-    followUpDate: document.getElementById('rxFollowUpDate').value || 'After 15 Days'
+    advice: document.getElementById('rxAdvice')?.value.trim() || '',
+    followUpDate: document.getElementById('rxFollowUpDate')?.value || 'After 15 Days'
   };
   const existing = getPrescriptions().filter((r) => r.rxId !== rec.rxId);
   existing.unshift(rec);
   savePrescriptions(existing);
+  postPrescriptionToServer(rec);
   refreshAdminDashboard();
   if (doPrint) setTimeout(() => window.print(), 200);
 }
@@ -945,27 +1021,157 @@ function shareCurrentRxWhatsApp() {
 function renderRxArchive() {
   const tbody = document.getElementById('rxArchiveTbody');
   if (!tbody) return;
-  const rxs = getPrescriptions();
+  const q = (document.getElementById('rxArchiveSearchInput')?.value || '').toLowerCase().trim();
+  const rxs = getPrescriptions().filter((r) =>
+    !q ||
+    (r.patientName || '').toLowerCase().includes(q) ||
+    (r.phone || '').toLowerCase().includes(q) ||
+    (r.diagnosis || '').toLowerCase().includes(q) ||
+    (r.rxId || '').toLowerCase().includes(q)
+  );
+
   tbody.innerHTML = rxs.length
-    ? rxs.map((r) => `<tr class="hover:bg-ivorySilk/70"><td class="py-3.5 px-5 font-mono font-bold">#${escapeHtml(r.rxId)}</td><td class="py-3.5 px-5">${escapeHtml(r.date)}</td><td class="py-3.5 px-5 font-semibold">${escapeHtml(r.patientName)}</td><td class="py-3.5 px-5">${escapeHtml(r.diagnosis)}</td><td class="py-3.5 px-5">${r.medications.length} Item(s)</td><td class="py-3.5 px-5 text-right"><button type="button" onclick="loadAndPrintSavedRx('${r.rxId}', true)" class="px-3 py-1 rounded-lg bg-obsidian text-gold-light text-xs font-semibold">Print A4</button></td></tr>`).join('')
+    ? rxs.map((r) => `
+      <tr class="hover:bg-ivorySilk/70">
+        <td class="py-3.5 px-5 font-mono font-bold">#${escapeHtml(r.rxId)}</td>
+        <td class="py-3.5 px-5 font-mono text-xs">${escapeHtml(r.date || '—')}</td>
+        <td class="py-3.5 px-5 font-semibold">${escapeHtml(r.patientName)}<div class="text-[11px] text-mutedInk">${escapeHtml(r.phone || '')}</div></td>
+        <td class="py-3.5 px-5">${escapeHtml(r.diagnosis || '—')}</td>
+        <td class="py-3.5 px-5">${(r.medications || []).length} Item(s)</td>
+        <td class="py-3.5 px-5 text-right space-x-1.5">
+          <button type="button" onclick="openRxDetailsModal('${escapeHtml(r.rxId)}')" class="px-3 py-1.5 rounded-lg bg-obsidian text-gold-light border border-gold/40 hover:bg-obsidian-light text-xs font-semibold transition">
+            View Details
+          </button>
+          <button type="button" onclick="repeatPrescriptionInStudio('${escapeHtml(r.rxId)}')" class="px-3 py-1.5 rounded-lg bg-gold-pale text-obsidian border border-gold text-xs font-semibold transition">
+            Repeat Rx
+          </button>
+        </td>
+      </tr>
+    `).join('')
     : `<tr><td colspan="6" class="py-8 text-center text-mutedInk italic">No saved prescriptions yet.</td></tr>`;
 }
 
-function loadAndPrintSavedRx(rxId, doPrint) {
+function openRxDetailsModal(rxId) {
+  const r = getPrescriptions().find((x) => x.rxId === rxId);
+  const modal = document.getElementById('rxDetailsModal');
+  if (!r || !modal) return;
+
+  document.getElementById('detailRxBadge').textContent = `#${r.rxId}`;
+  document.getElementById('detailPatientTitle').textContent = r.patientName || 'Patient';
+  document.getElementById('detailVisitDate').textContent = r.date || '—';
+  document.getElementById('detailPatientMeta').textContent = `${r.ageGender || '—'} • ${r.phone || '—'}`;
+  document.getElementById('detailFollowUp').textContent = r.followUpDate || '—';
+  document.getElementById('detailDiagnosis').textContent = r.diagnosis || 'Dermatology Evaluation';
+  document.getElementById('detailAdvice').textContent = r.advice || 'Follow prescribed dosage and sunscreen/skincare routine as advised.';
+
+  const medListEl = document.getElementById('detailMedList');
+  const meds = Array.isArray(r.medications) ? r.medications : [];
+  if (!meds.length) {
+    medListEl.innerHTML = `<div class="p-3.5 rounded-xl bg-ivorySilk border border-stoneBorder text-xs text-mutedInk italic">No medicines recorded in this prescription.</div>`;
+  } else {
+    medListEl.innerHTML = meds.map((m, idx) => `
+      <div class="p-3.5 rounded-xl bg-ivorySilk border border-stoneBorder flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+        <div>
+          <strong class="text-obsidian text-sm">${idx + 1}. ${escapeHtml(m.name)}</strong>
+          <div class="text-mutedInk mt-0.5">${escapeHtml(m.instruction || '')}</div>
+        </div>
+        <div class="sm:text-right shrink-0">
+          <span class="px-2.5 py-1 rounded-full bg-gold-pale border border-gold/40 text-gold-bronze font-semibold inline-block">${escapeHtml(m.freq || '')}</span>
+          <div class="text-[11px] font-mono text-obsidian mt-1">${escapeHtml(m.duration || '')}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  const repeatBtn = document.getElementById('repeatRxFromModalBtn');
+  if (repeatBtn) {
+    repeatBtn.onclick = () => repeatPrescriptionInStudio(rxId);
+  }
+
+  modal.classList.remove('hidden');
+  if (window.lucide) lucide.createIcons();
+}
+
+function closeRxDetailsModal() {
+  document.getElementById('rxDetailsModal')?.classList.add('hidden');
+}
+
+function repeatPrescriptionInStudio(rxId) {
   const r = getPrescriptions().find((x) => x.rxId === rxId);
   if (!r) return;
-  currentRxId = r.rxId;
-  draftMedications = [...r.medications];
-  document.getElementById('rxPatientName').value = r.patientName;
-  document.getElementById('rxDiagnosis').value = r.diagnosis;
+  closeRxDetailsModal();
+  currentRxId = generateRxCode();
+  draftMedications = Array.isArray(r.medications) ? r.medications.map((m) => ({ ...m })) : [];
+
+  document.getElementById('rxPatientName').value = r.patientName || '';
+  if (document.getElementById('rxAgeGender')) document.getElementById('rxAgeGender').value = r.ageGender && r.ageGender !== '—' ? r.ageGender : '';
+  if (document.getElementById('rxPatientPhone')) document.getElementById('rxPatientPhone').value = r.phone && r.phone !== '—' ? r.phone : '';
+  document.getElementById('rxDiagnosis').value = r.diagnosis || '';
+  if (document.getElementById('rxAdvice')) document.getElementById('rxAdvice').value = r.advice || '';
+
   switchAdminTab('rxStudio');
   renderComposerMedList();
   syncLiveRxPreview();
-  if (doPrint) setTimeout(() => window.print(), 200);
 }
 
 function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+/* ==================== SERVER DATABASE SYNC LAYER (/api) ==================== */
+async function syncClinicDataFromServer() {
+  try {
+    const [apptRes, rxRes] = await Promise.all([
+      fetch('/api/appointments'),
+      fetch('/api/prescriptions')
+    ]);
+
+    if (apptRes.ok) {
+      const serverAppts = await apptRes.json();
+      if (Array.isArray(serverAppts)) {
+        localStorage.setItem(STORAGE_KEY_APPTS, JSON.stringify(serverAppts));
+      }
+    }
+
+    if (rxRes.ok) {
+      const serverRxs = await rxRes.json();
+      if (Array.isArray(serverRxs)) {
+        localStorage.setItem(STORAGE_KEY_RX, JSON.stringify(serverRxs));
+      }
+    }
+
+    if (document.body.getAttribute('data-page') === 'admin') {
+      refreshAdminDashboard();
+    }
+  } catch (err) {
+    // Offline/static fallback keeps localStorage working smoothly
+  }
+}
+
+async function postAppointmentToServer(apptObj) {
+  try {
+    await fetch('/api/appointments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(apptObj)
+    });
+  } catch (e) {}
+}
+
+async function deleteAppointmentOnServer(passId) {
+  try {
+    await fetch(`/api/appointments/${encodeURIComponent(passId)}`, { method: 'DELETE' });
+  } catch (e) {}
+}
+
+async function postPrescriptionToServer(rxObj) {
+  try {
+    await fetch('/api/prescriptions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rxObj)
+    });
+  } catch (e) {}
 }

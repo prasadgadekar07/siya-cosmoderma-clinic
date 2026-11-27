@@ -1,0 +1,15 @@
+{
+  "name": "siya-cosmoderma-clinic",
+  "version": "1.1.0",
+  "description": "Siya Cosmoderma Hub Clinic full-stack platform with Express, PostgreSQL & SQLite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "pg": "^8.13.1",
+    "sqlite3": "^5.1.7"
+  }
+}
