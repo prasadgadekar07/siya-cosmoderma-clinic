@@ -1,0 +1,197 @@
+/* ==================== SIYA COSMODERMA HUB CLINIC — OFFICIAL IVORY, GOLD & EMERALD LUXURY CSS ==================== */
+
+:root {
+  --ivory: #FBF9F5;
+  --alabaster: #F4EFE6;
+  --emerald: #11241E;
+  --emerald-light: #1A352C;
+  --gold: #BFA065;
+  --gold-light: #D9C293;
+  --gold-bronze: #8C6D3F;
+  --ink: #18201D;
+  --muted-ink: #525C58;
+  --stone-border: #E5DEC9;
+}
+
+body {
+  background-color: #FBF9F5;
+  color: #18201D;
+  font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif;
+  overflow-x: hidden;
+}
+
+.font-display {
+  font-family: 'Cormorant Garamond', 'Noto Sans Devanagari', Georgia, serif;
+}
+
+/* ==================== OFFICIAL IVORY AURORA & SILK TEXTURE ==================== */
+.aurora-bg {
+  background:
+    radial-gradient(circle at 14% 12%, rgba(191, 160, 101, 0.16) 0%, transparent 42%),
+    radial-gradient(circle at 86% 18%, rgba(14, 165, 233, 0.08) 0%, transparent 42%),
+    radial-gradient(circle at 50% 78%, rgba(244, 239, 230, 0.9) 0%, transparent 65%),
+    linear-gradient(180deg, #FBF9F5 0%, #F6F1E8 50%, #FBF9F5 100%);
+}
+
+.luxury-light-rays {
+  background: repeating-conic-gradient(
+    from 0deg at 50% -10%,
+    rgba(191, 160, 101, 0.06) 0deg 8deg,
+    transparent 8deg 22deg
+  );
+  animation: raySlowRotate 48s linear infinite;
+}
+
+@keyframes raySlowRotate {
+  0% { transform: rotate(-3deg) scale(1.1); }
+  50% { transform: rotate(3deg) scale(1.14); }
+  100% { transform: rotate(-3deg) scale(1.1); }
+}
+
+/* Soft Champagne Cursor Spotlight */
+#cursorSpotlight {
+  position: fixed;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(191, 160, 101, 0.14) 0%, rgba(17, 36, 30, 0.03) 40%, transparent 72%);
+}
+
+/* Official Porcelain & Gold Glass Card */
+.glass-luxury {
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.92) 0%, rgba(244, 239, 230, 0.88) 100%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid #E5DEC9;
+  box-shadow:
+    0 20px 50px -15px rgba(17, 36, 30, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-luxury:hover {
+  border-color: #BFA065;
+  box-shadow:
+    0 24px 56px -14px rgba(17, 36, 30, 0.12),
+    0 0 24px -6px rgba(191, 160, 101, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+/* AI Skin Analyzer Medical Glass Card */
+.holo-glass {
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 247, 252, 0.92) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(14, 165, 233, 0.35);
+  box-shadow:
+    0 20px 50px -15px rgba(14, 116, 144, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.gold-hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #BFA065 50%, transparent);
+}
+
+/* ==================== AI SKIN SCANNER ANIMATIONS ==================== */
+@keyframes laserScanSweep {
+  0% { top: 4%; opacity: 0.25; }
+  15% { opacity: 1; }
+  50% { top: 92%; opacity: 1; }
+  85% { opacity: 1; }
+  100% { top: 4%; opacity: 0.25; }
+}
+
+.ai-scan-beam {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #0284C7, #38BDF8, #0284C7, transparent);
+  box-shadow: 0 0 18px #38BDF8, 0 0 34px rgba(2, 132, 199, 0.75);
+  animation: laserScanSweep 2.8s ease-in-out infinite;
+}
+
+@keyframes facePulseRing {
+  0%, 100% { transform: scale(1); opacity: 0.75; }
+  50% { transform: scale(1.03); opacity: 1; }
+}
+
+.face-mesh-pulse {
+  animation: facePulseRing 3s ease-in-out infinite;
+}
+
+/* ==================== 3D TILT & SIGNATURE ANIMATIONS ==================== */
+.perspective-1200 {
+  perspective: 1200px;
+}
+
+.tilt-card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  will-change: transform;
+}
+
+.tilt-depth-pop {
+  transform: translateZ(26px);
+}
+
+@keyframes sigDraw {
+  from { stroke-dashoffset: 420; }
+  to { stroke-dashoffset: 0; }
+}
+
+.signature-path {
+  stroke-dasharray: 420;
+  stroke-dashoffset: 0;
+  animation: sigDraw 3.5s ease-in-out infinite alternate;
+}
+
+/* ==================== FLOATING TESTIMONIALS & MAGNETIC BUTTONS ==================== */
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.float-slow {
+  animation: gentleFloat 5.5s ease-in-out infinite;
+}
+
+.float-slow-delay {
+  animation: gentleFloat 6.2s ease-in-out 1.4s infinite;
+}
+
+.magnetic-btn {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.ba-container {
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #FBF9F5; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #BFA065, #8C6D3F);
+  border-radius: 9999px;
+}
+
+/* A4 Prescription Print Support (admin.html) */
+@media print {
+  @page { size: A4 portrait; margin: 10mm; }
+  body { background: #FFFFFF !important; color: #111827 !important; }
+  body * { visibility: hidden; }
+  #printable-rx-sheet, #printable-rx-sheet * { visibility: visible; }
+  #printable-rx-sheet {
+    position: fixed !important; left: 0 !important; top: 0 !important;
+    width: 100% !important; max-width: 100% !important; margin: 0 !important;
+    padding: 14mm !important; border: 1.5px solid #BFA065 !important; background: #FFFFFF !important;
+  }
+  .no-print { display: none !important; }
+}

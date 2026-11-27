@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Siya Cosmoderma Hub Clinic | Dr. Vaishnavi Gayake — Official Dermatology & Aesthetic Sanctuary</title>
+  <meta name="description" content="Official digital sanctuary of Siya Cosmoderma Hub Clinic led by Dr. Vaishnavi Gayake in Kannad, Dist. Chhatrapati Sambhajinagar." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ivorySilk: '#FBF9F5',
+            alabasterCard: '#F4EFE6',
+            obsidian: { DEFAULT: '#11241E', light: '#1A352C', deep: '#0B1814' },
+            gold: { DEFAULT: '#BFA065', light: '#D9C293', bronze: '#8C6D3F', pale: '#F3ECE0' },
+            stoneBorder: '#E5DEC9',
+            ink: '#18201D',
+            mutedInk: '#525C58'
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', '"Noto Sans Devanagari"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans Devanagari"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="patient" class="aurora-bg text-ink antialiased selection:bg-gold/25 selection:text-obsidian">
+
+  <!-- Cursor Spotlight & Ambient Golden Particles -->
+  <div id="cursorSpotlight" aria-hidden="true"></div>
+  <canvas id="ambientParticlesCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-60"></canvas>
+  <div class="fixed inset-0 luxury-light-rays pointer-events-none z-0"></div>
+
+  <!-- ==================== TOP OFFICIAL CLINIC STRIP ==================== -->
+  <div class="relative z-20 bg-obsidian text-ivorySilk/90 border-b border-gold/30 text-[11px] sm:text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-col sm:flex-row items-center justify-between gap-1.5">
+      <div class="flex items-center gap-2 tracking-[0.12em] uppercase text-gold-light font-medium">
+        <span class="w-1.5 h-1.5 rounded-full bg-gold animate-pulse"></span>
+        <span>OPD &amp; Private Consultations: Mon – Sat &bull; 10:30 AM – 8:30 PM</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="hidden md:inline text-ivorySilk/75">Shivaji Nagar, Kannad, Dist. Chhatrapati Sambhajinagar</span>
+        <button type="button" onclick="openWhatsAppConcierge()" class="text-gold-light hover:text-white font-semibold uppercase tracking-wider">
+          WhatsApp: 8390020346 &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== STICKY PORCELAIN & GOLD HEADER ==================== -->
+  <header class="sticky top-0 z-50 bg-ivorySilk/90 backdrop-blur-xl border-b border-stoneBorder">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      <a href="#scene-hero" class="flex items-center gap-3 shrink-0">
+        <div class="w-11 h-11 rounded-2xl bg-obsidian text-gold-light border border-gold/50 flex items-center justify-center font-display font-bold text-xl shadow-md">
+          SC
+        </div>
+        <div class="whitespace-nowrap">
+          <span class="font-display text-lg sm:text-xl tracking-[0.07em] uppercase text-obsidian font-bold block leading-none">
+            Siya Cosmoderma
+          </span>
+          <span class="text-[10px] uppercase tracking-[0.24em] text-gold-bronze font-semibold block mt-1">
+            Hub Clinic &bull; Kannad
+          </span>
+        </div>
+      </a>
+
+      <nav class="hidden xl:flex items-center gap-5 text-[11px] uppercase tracking-[0.15em] font-semibold text-obsidian/80 whitespace-nowrap">
+        <a href="#scene-ai" class="hover:text-gold-bronze transition">AI Skin Scan</a>
+        <a href="#scene-3d-face" class="hover:text-gold-bronze transition">Facial Zone Map</a>
+        <a href="#scene-skin-layers" class="hover:text-gold-bronze transition">Skin Science</a>
+        <a href="#scene-doctor" class="hover:text-gold-bronze transition">Dr. Vaishnavi Gayake</a>
+        <a href="#scene-results" class="hover:text-gold-bronze transition">Results</a>
+        <a href="#scene-booking" class="hover:text-gold-bronze transition">Booking</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5 shrink-0">
+        <a href="admin.html" class="magnetic-btn inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-obsidian hover:bg-obsidian-light text-gold-light border border-gold/50 text-[11px] font-semibold uppercase tracking-[0.13em] shadow-sm whitespace-nowrap">
+          <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-gold"></i>
+          <span>Doctor / Admin</span>
+        </a>
+        <a href="#scene-booking" class="magnetic-btn hidden sm:inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white hover:bg-alabasterCard text-obsidian border border-gold text-[11px] font-bold uppercase tracking-[0.14em] shadow-sm whitespace-nowrap">
+          <span>Book Visit</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== SCENE 1 & 2: OFFICIAL MEDICAL-LUXURY HERO ==================== -->
+  <section id="scene-hero" class="relative z-10 pt-14 pb-24 sm:pt-20 sm:pb-28 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+
+        <div class="lg:col-span-7 space-y-7 hero-stagger">
+          <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white border border-gold/45 text-gold-bronze text-[11px] uppercase tracking-[0.22em] font-semibold shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
+            <span>Clinical Dermatology, Lasers &amp; Aesthetics &bull; Kannad</span>
+          </div>
+
+          <h1 class="font-display text-4xl sm:text-6xl lg:text-[4.35rem] font-normal text-obsidian leading-[1.07]">
+            Where Clinical Precision Meets <span class="italic font-medium text-gold-bronze">Timeless Radiance</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-mutedInk leading-relaxed max-w-2xl">
+            Led by <strong class="text-obsidian font-semibold">Dr. Vaishnavi Gayake</strong> at Shivaji Nagar, Kannad (Dist. Chhatrapati Sambhajinagar) — an intimate medical dermatology and aesthetic sanctuary offering AI dermal diagnostics, interactive facial mapping, and US-FDA cleared laser platforms.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <a href="#scene-booking" class="magnetic-btn px-8 py-4 rounded-full bg-obsidian hover:bg-obsidian-light text-gold-light border border-gold/50 text-xs sm:text-sm font-bold uppercase tracking-[0.16em] shadow-xl inline-flex items-center gap-2.5">
+              <span>Book Private Consultation</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 text-gold"></i>
+            </a>
+            <a href="#scene-ai" class="magnetic-btn px-7 py-4 rounded-full bg-white hover:bg-alabasterCard text-obsidian border border-gold text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] shadow-sm inline-flex items-center gap-2">
+              <i data-lucide="scan-face" class="w-4 h-4 text-gold-bronze"></i>
+              <span>Try AI Skin Scan</span>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 pt-6 border-t border-stoneBorder">
+            <div>
+              <span class="font-display text-2xl sm:text-3xl text-obsidian font-bold block">US-FDA</span>
+              <span class="text-[11px] text-mutedInk uppercase tracking-wider font-medium">Laser &amp; Energy Tech</span>
+            </div>
+            <div>
+              <span class="font-display text-2xl sm:text-3xl text-obsidian font-bold block">100%</span>
+              <span class="text-[11px] text-mutedInk uppercase tracking-wider font-medium">Bespoke Protocols</span>
+            </div>
+            <div>
+              <span class="font-display text-2xl sm:text-3xl text-obsidian font-bold block">Kannad</span>
+              <span class="text-[11px] text-mutedInk uppercase tracking-wider font-medium">Shivaji Nagar Hub</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Emerald & Gold Signature Specialist Card -->
+        <div class="lg:col-span-5 perspective-1200 hero-stagger">
+          <div class="tilt-card-3d rounded-[2.25rem] bg-obsidian text-ivorySilk p-7 sm:p-9 border border-gold/50 shadow-2xl relative overflow-hidden">
+            <div class="rounded-[1.75rem] border border-gold/30 bg-obsidian-deep/90 p-6 text-center space-y-5 tilt-depth-pop">
+              <div class="w-24 h-24 mx-auto rounded-full border-2 border-gold flex items-center justify-center bg-obsidian shadow-lg">
+                <i data-lucide="sparkles" class="w-10 h-10 text-gold-light"></i>
+              </div>
+              <div>
+                <span class="text-[10px] uppercase tracking-[0.24em] text-gold-light font-semibold block">Chief Dermatologist</span>
+                <h2 class="font-display text-3xl text-white mt-1">Dr. Vaishnavi Gayake</h2>
+                <p class="text-xs text-ivorySilk/75 mt-1">Consultant Dermatologist, Cosmetologist &amp; Trichologist</p>
+              </div>
+              <div class="gold-hairline w-24 mx-auto"></div>
+              <p class="font-display italic text-lg text-gold-light">
+                “Precision diagnostics, ethical medical artistry, and timeless skin luminosity.”
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 1. AI SKIN ANALYSIS (PORCELAIN & HOLOGRAPHIC MEDICAL UI) ==================== -->
+  <section id="scene-ai" class="relative z-10 py-20 sm:py-28 bg-white border-y border-stoneBorder">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-14 space-y-3">
+        <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-800 text-[11px] uppercase tracking-[0.22em] font-semibold">
+          <i data-lucide="cpu" class="w-3.5 h-3.5 text-sky-600"></i>
+          <span>AI Dermal Intelligence &bull; Diagnostic Preview</span>
+        </span>
+        <h2 class="font-display text-3xl sm:text-5xl text-obsidian">AI Skin Analyzer &amp; Biomarker Score</h2>
+        <p class="text-sm sm:text-base text-mutedInk">
+          Upload a clear selfie or run a quick live camera scan (camera turns off automatically after scanning) to preview hydration, pigmentation, pores, and personalized treatment suggestions.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        <!-- Left: Upload / Camera Scanner Frame -->
+        <div class="lg:col-span-5 holo-glass rounded-[2rem] p-6 sm:p-8 flex flex-col justify-between space-y-6">
+          <div class="relative rounded-2xl bg-obsidian text-white border border-gold/40 h-80 overflow-hidden flex items-center justify-center">
+            <img id="aiUploadedImg" alt="Skin Scan Preview" class="hidden absolute inset-0 w-full h-full object-cover opacity-85" />
+            <video id="aiLiveVideo" autoplay playsinline muted class="hidden absolute inset-0 w-full h-full object-cover opacity-85"></video>
+
+            <svg class="w-48 h-60 face-mesh-pulse relative z-10" viewBox="0 0 200 250" fill="none">
+              <ellipse cx="100" cy="122" rx="64" ry="86" stroke="#38BDF8" stroke-width="1.4" stroke-dasharray="6 4"/>
+              <path d="M58 102C68 95 82 95 90 102M110 102C118 95 132 95 142 102" stroke="#7DD3FC" stroke-width="1.3"/>
+              <path d="M100 105V145L92 152H108" stroke="#38BDF8" stroke-width="1.2"/>
+              <path d="M78 175C88 184 112 184 122 175" stroke="#7DD3FC" stroke-width="1.3"/>
+              <circle cx="74" cy="105" r="3" fill="#38BDF8"/><circle cx="126" cy="105" r="3" fill="#38BDF8"/>
+              <circle cx="64" cy="138" r="3" fill="#D9C293"/><circle cx="136" cy="138" r="3" fill="#D9C293"/>
+              <circle cx="100" cy="192" r="3" fill="#38BDF8"/>
+            </svg>
+
+            <div class="ai-scan-beam z-20"></div>
+
+            <div id="aiScanStatusBadge" class="absolute bottom-3 left-3 right-3 z-20 px-3.5 py-2 rounded-xl bg-obsidian-deep/90 border border-gold/40 text-[11px] font-mono text-sky-300 flex items-center justify-between">
+              <span>STATUS: AI OPTICAL MESH READY</span>
+              <span class="text-gold-light">CAMERA OFF</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <label class="cursor-pointer py-3.5 px-4 rounded-xl bg-white hover:bg-alabasterCard border border-gold text-obsidian text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm transition">
+              <i data-lucide="upload" class="w-4 h-4 text-gold-bronze"></i>
+              <span>Upload Photo</span>
+              <input type="file" accept="image/*" onchange="handleAiPhotoUpload(event)" class="hidden" />
+            </label>
+            <button type="button" onclick="runSimulatedAiScan()" class="py-3.5 px-4 rounded-xl bg-obsidian hover:bg-obsidian-light text-gold-light border border-gold/50 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition">
+              <i data-lucide="camera" class="w-4 h-4 text-gold"></i>
+              <span>Live AI Scan</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Skin Score Dashboard -->
+        <div class="lg:col-span-7 glass-luxury rounded-[2rem] p-6 sm:p-8 flex flex-col justify-between space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-stoneBorder pb-5">
+            <div>
+              <span class="text-[10px] uppercase tracking-[0.2em] text-gold-bronze font-semibold block">Composite Dermal Index</span>
+              <h3 class="font-display text-2xl sm:text-3xl text-obsidian">Cellular Skin Health Telemetry</h3>
+            </div>
+            <div class="px-5 py-2.5 rounded-2xl bg-obsidian text-white border border-gold/50 text-right shadow">
+              <span class="text-[10px] uppercase tracking-wider text-gold-light block">Overall Skin Score</span>
+              <strong id="aiOverallScore" class="font-display text-3xl font-bold text-white">84 <span class="text-sm text-gold-light">/ 100</span></strong>
+            </div>
+          </div>
+
+          <div id="aiMetricsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Populated dynamically via app.js -->
+          </div>
+
+          <div class="rounded-2xl bg-obsidian text-white border border-gold/40 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span class="text-[10px] uppercase tracking-[0.18em] text-gold-light font-semibold block">AI Recommended Protocol</span>
+              <p id="aiRecommendedProtocol" class="font-display text-xl text-white mt-0.5">
+                03 • Hydra-Infusion Glass Skin + Pico-Laser Toning
+              </p>
+            </div>
+            <a href="#scene-booking" class="magnetic-btn px-6 py-3 rounded-full bg-gold hover:bg-gold-light text-obsidian text-xs font-bold uppercase tracking-[0.15em] shrink-0 text-center">
+              Consult Dr. Vaishnavi &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 2. INTERACTIVE FACIAL & TRICHOLOGY ZONE MAP ==================== -->
+  <section id="scene-3d-face" class="relative z-10 py-20 sm:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
+        <span class="text-[11px] uppercase tracking-[0.22em] text-gold-bronze font-semibold block">
+          Interactive Anatomical Mapping
+        </span>
+        <h2 class="font-display text-3xl sm:text-5xl text-obsidian">Explore Facial &amp; Trichology Zones</h2>
+        <p class="text-sm sm:text-base text-mutedInk">
+          Click any clinical hotspot directly on the illustrated face or select a concern pill (Acne, Pigmentation, Dark Circles, Fine Lines, Hair Loss, Scars, Lips, Jawline) to inspect targeted treatments.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 relative rounded-[2rem] bg-obsidian border border-gold/50 shadow-2xl overflow-hidden h-[460px] sm:h-[520px] flex items-center justify-center p-4">
+          <div class="absolute top-4 left-4 z-10 px-3.5 py-1.5 rounded-full bg-obsidian-deep/90 border border-gold/40 text-[10px] uppercase tracking-[0.16em] text-gold-light">
+            Interactive Dermal Map &bull; Click Any Zone
+          </div>
+          <div id="threeFaceContainer" class="w-full h-full flex items-center justify-center">
+            <!-- Luxury Interactive Face SVG injected by app.js -->
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 space-y-5">
+          <div class="flex flex-wrap gap-2" id="faceHotspotButtons">
+            <!-- 8 Hotspot Pills populated by app.js -->
+          </div>
+
+          <div id="faceHotspotCard" class="rounded-[2rem] glass-luxury p-7 sm:p-8 space-y-4">
+            <div class="flex items-center justify-between">
+              <span id="hotspotZoneBadge" class="px-3 py-1 rounded-full bg-gold-pale border border-gold/40 text-gold-bronze text-[10px] uppercase tracking-[0.18em] font-semibold">
+                Zone 01 • Dermal Focus
+              </span>
+              <span class="text-xs text-mutedInk font-medium">US-FDA Protocol</span>
+            </div>
+            <h3 id="hotspotTitle" class="font-display text-3xl text-obsidian">Acne &amp; Sebum Control</h3>
+            <p id="hotspotDesc" class="text-sm text-mutedInk leading-relaxed">
+              Targeted salicylic-mandelic peels, blue-light phototherapy, and medical comedone extraction designed to calm active inflammation without barrier stripping.
+            </p>
+            <div class="pt-4 border-t border-stoneBorder flex items-center justify-between gap-3">
+              <div>
+                <span class="text-[10px] uppercase tracking-wider text-gold-bronze font-semibold block">Recommended Treatment</span>
+                <strong id="hotspotTreatment" class="text-xs sm:text-sm text-obsidian">01 • Medical Acne &amp; Scar Remodeling</strong>
+              </div>
+              <a href="#scene-booking" class="px-5 py-2.5 rounded-full bg-obsidian text-gold-light border border-gold/40 text-xs font-bold uppercase tracking-wider shrink-0">
+                Reserve
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 3. SKIN LAYER SCIENCE (6 STAGES) ==================== -->
+  <section id="scene-skin-layers" class="relative z-10 py-20 sm:py-28 bg-white border-y border-stoneBorder">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-14 space-y-3">
+        <span class="text-[11px] uppercase tracking-[0.22em] text-gold-bronze font-semibold block">
+          Cellular Regeneration Science
+        </span>
+        <h2 class="font-display text-3xl sm:text-5xl text-obsidian">6-Stage Dermal Healing &amp; Collagen Rebirth</h2>
+        <p class="text-sm text-mutedInk">
+          Step through the 6 cellular stages showing how targeted laser energy clears pigment and stimulates fresh dermal collagen.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-6 rounded-[2rem] bg-obsidian p-6 sm:p-8 border border-gold/45 shadow-xl">
+          <div id="skinLayerStageVisual" class="h-72 sm:h-80 rounded-2xl bg-obsidian-deep border border-gold/30 flex items-center justify-center p-4 overflow-hidden">
+            <!-- Dynamic Isometric SVG Skin Layers -->
+          </div>
+        </div>
+
+        <div class="lg:col-span-6 space-y-3" id="skinStagesList">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 7 & 8. DOCTOR 3D EXPERIENCE & PATIENT JOURNEY ==================== -->
+  <section id="scene-doctor" class="relative z-10 py-20 sm:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+
+        <!-- 7. Doctor Official 3D Profile Card -->
+        <div class="lg:col-span-5 perspective-1200">
+          <div class="tilt-card-3d rounded-[2.25rem] bg-obsidian text-ivorySilk p-8 sm:p-10 space-y-6 border border-gold/50 shadow-2xl">
+            <div class="flex items-center justify-between">
+              <span class="px-3.5 py-1 rounded-full bg-gold/15 border border-gold/40 text-gold-light text-[10px] uppercase tracking-[0.2em] font-semibold">
+                Founder &amp; Chief Consultant
+              </span>
+              <span class="font-display italic text-gold-light">Kannad, MH</span>
+            </div>
+
+            <div class="flex items-center gap-5 tilt-depth-pop">
+              <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-gold to-gold-bronze text-obsidian flex items-center justify-center font-display text-3xl font-bold shadow-xl shrink-0">
+                VG
+              </div>
+              <div>
+                <h2 class="font-display text-3xl text-white font-semibold">Dr. Vaishnavi Gayake</h2>
+                <p class="text-xs text-gold-light uppercase tracking-[0.14em] font-semibold mt-1">
+                  Dermatologist &bull; Cosmetologist &bull; Trichologist
+                </p>
+              </div>
+            </div>
+
+            <p class="text-sm text-ivorySilk/80 leading-relaxed">
+              Dedicated to bringing metropolitan-grade, evidence-based clinical dermatology and US-FDA laser aesthetics to Kannad, Dist. Chhatrapati Sambhajinagar. Specializes in acne scar remodeling, stubborn melasma, bridal skin architecture, and regenerative hair restoration.
+            </p>
+
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div class="p-3.5 rounded-xl bg-white/5 border border-gold/25">
+                <strong class="text-gold-light block">Specializations</strong>
+                <span class="text-ivorySilk/80">Lasers, Acne Scars, Melasma &amp; PRP</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-white/5 border border-gold/25">
+                <strong class="text-gold-light block">Sanctuary</strong>
+                <span class="text-ivorySilk/80">Siya Cosmoderma Hub Clinic</span>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-gold/25 flex items-center justify-between">
+              <div>
+                <svg class="w-48 h-12" viewBox="0 0 220 50" fill="none">
+                  <path class="signature-path" d="M12 36C24 14 38 10 42 28C45 40 58 18 72 22C84 25 88 35 104 24C118 14 134 34 152 26C170 18 188 32 208 22" stroke="#D9C293" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span class="text-[10px] uppercase tracking-[0.2em] text-ivorySilk/70 block">Dr. Vaishnavi Gayake &bull; Signature</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. 7-Step Patient Journey Timeline -->
+        <div class="lg:col-span-7 space-y-6">
+          <div>
+            <span class="text-[11px] uppercase tracking-[0.22em] text-gold-bronze font-semibold block">Bespoke Care Pathway</span>
+            <h2 class="font-display text-3xl sm:text-4xl text-obsidian mt-1">Your 7-Step Clinical Transformation Journey</h2>
+          </div>
+
+          <div class="relative pl-8 border-l-2 border-gold/50 space-y-5" id="patientJourneyTimeline">
+            <!-- Populated by app.js -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 4. BEFORE & AFTER EXPERIENCE ==================== -->
+  <section id="scene-results" class="relative z-10 py-20 sm:py-28 bg-white border-y border-stoneBorder">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+        <div>
+          <span class="text-[11px] uppercase tracking-[0.22em] text-gold-bronze font-semibold block">Clinical Outcomes</span>
+          <h2 class="font-display text-3xl sm:text-5xl text-obsidian mt-1">Before &amp; After Interactive Comparison</h2>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" onclick="selectCase(0)" id="case-btn-0" class="case-btn px-4 py-2 rounded-full text-xs uppercase tracking-wider font-semibold bg-obsidian text-gold-light border border-gold">Acne Scars</button>
+          <button type="button" onclick="selectCase(1)" id="case-btn-1" class="case-btn px-4 py-2 rounded-full text-xs uppercase tracking-wider font-semibold bg-ivorySilk text-obsidian border border-stoneBorder">Melasma Clarity</button>
+          <button type="button" onclick="selectCase(2)" id="case-btn-2" class="case-btn px-4 py-2 rounded-full text-xs uppercase tracking-wider font-semibold bg-ivorySilk text-obsidian border border-stoneBorder">Hair Density</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 rounded-[2rem] glass-luxury p-5 sm:p-6">
+          <div id="baContainer" class="ba-container relative w-full h-80 sm:h-96 rounded-2xl overflow-hidden cursor-ew-resize border border-gold/45">
+            <div id="baAfterVisual" class="absolute inset-0 w-full h-full transition-transform duration-300"></div>
+            <span class="absolute top-4 right-4 z-10 px-3.5 py-1 rounded-full bg-obsidian text-gold-light border border-gold/40 text-[10px] uppercase tracking-widest font-semibold">After Protocol</span>
+
+            <div id="baBeforeWrapper" class="absolute inset-0 w-full h-full overflow-hidden" style="clip-path: inset(0 50% 0 0);">
+              <div id="baBeforeVisual" class="w-full h-full transition-transform duration-300"></div>
+            </div>
+            <span class="absolute top-4 left-4 z-10 px-3.5 py-1 rounded-full bg-black/75 text-white text-[10px] uppercase tracking-widest font-semibold">Baseline</span>
+
+            <div id="baHandle" class="absolute top-0 bottom-0 z-20 w-[2px] bg-gold shadow-[0_0_20px_#BFA065] pointer-events-none" style="left: 50%;">
+              <div class="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-obsidian text-gold-light border-2 border-gold flex items-center justify-center shadow-2xl">
+                <i data-lucide="chevrons-left-right" class="w-5 h-5"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-4 px-1 text-xs text-mutedInk">
+            <span>Drag slider to compare dermal texture</span>
+            <button type="button" onclick="toggleBaZoom()" id="baZoomBtn" class="px-3.5 py-1.5 rounded-full bg-obsidian text-gold-light font-semibold transition">
+              + Magnify 1.35x
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 rounded-[2rem] glass-luxury p-7 sm:p-9 space-y-5">
+          <span id="caseSessions" class="px-3.5 py-1 rounded-full bg-gold-pale border border-gold/40 text-gold-bronze text-[11px] uppercase tracking-wider font-semibold inline-block">
+            4 Sessions &bull; Fractional RF + PRP
+          </span>
+          <h3 id="caseTitle" class="font-display text-3xl text-obsidian">Acne Scar Remodeling</h3>
+          <p id="caseNotes" class="text-sm text-mutedInk leading-relaxed">
+            Illustrative dermal remodeling demonstrating softened atrophic scar depth, refined pore architecture, and restored epidermal luminosity.
+          </p>
+          <div class="grid grid-cols-2 gap-4 pt-3 border-t border-stoneBorder text-xs">
+            <div>
+              <span class="text-mutedInk block">Recovery Timeline</span>
+              <strong class="text-obsidian text-sm">24–48 Hours Mild</strong>
+            </div>
+            <div>
+              <span class="text-mutedInk block">Patient Satisfaction</span>
+              <strong class="text-gold-bronze text-sm">98.6% Verified</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 9 & 10. GALLERY & VIDEO TESTIMONIALS ==================== -->
+  <section id="scene-gallery" class="relative z-10 py-20 sm:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+
+      <div>
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="text-[11px] uppercase tracking-[0.22em] text-gold-bronze font-semibold block">Patient Stories</span>
+          <h2 class="font-display text-3xl sm:text-5xl text-obsidian mt-1">Voices of Radiance</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="rounded-[2rem] glass-luxury p-7 space-y-4 float-slow">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-full bg-obsidian text-gold-light border border-gold flex items-center justify-center font-display font-bold">AK</div>
+                <div>
+                  <strong class="text-obsidian text-sm block">Ananya Kulkarni</strong>
+                  <span class="text-[11px] text-mutedInk">Kannad &bull; Recovery: 2 Days</span>
+                </div>
+              </div>
+              <button type="button" onclick="openVideoStoryModal('Ananya Kulkarni — Acne Scar Remodeling', '4 sessions with Dr. Vaishnavi Gayake transformed my confidence before my wedding.')" class="w-10 h-10 rounded-full bg-obsidian text-gold-light border border-gold flex items-center justify-center shadow-md hover:scale-105 transition" aria-label="Play Story">
+                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+              </button>
+            </div>
+            <div class="text-gold-bronze text-xs tracking-widest">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="font-display italic text-xl text-obsidian">
+              “Dr. Vaishnavi explained every layer of my skin with digital dermoscopy. My acne scars faded dramatically.”
+            </p>
+            <span class="text-[10px] uppercase tracking-widest text-gold-bronze font-semibold block">Protocol: Medical Acne &amp; Scar Remodeling</span>
+          </div>
+
+          <div class="rounded-[2rem] glass-luxury p-7 space-y-4 float-slow-delay">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-full bg-obsidian text-gold-light border border-gold flex items-center justify-center font-display font-bold">RD</div>
+                <div>
+                  <strong class="text-obsidian text-sm block">Rohan Deshmukh</strong>
+                  <span class="text-[11px] text-mutedInk">Chhatrapati Sambhajinagar</span>
+                </div>
+              </div>
+              <button type="button" onclick="openVideoStoryModal('Rohan Deshmukh — PRP & Exosome Hair Restoration', 'Visible follicular density improvement within 3 months at Siya Cosmoderma Hub Clinic.')" class="w-10 h-10 rounded-full bg-obsidian text-gold-light border border-gold flex items-center justify-center shadow-md hover:scale-105 transition" aria-label="Play Story">
+                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+              </button>
+            </div>
+            <div class="text-gold-bronze text-xs tracking-widest">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="font-display italic text-xl text-obsidian">
+              “World-class hygiene and genuine medical guidance right here in Kannad. My hair density is back.”
+            </p>
+            <span class="text-[10px] uppercase tracking-widest text-gold-bronze font-semibold block">Protocol: PRP &amp; Exosome Hair Therapy</span>
+          </div>
+
+          <div class="rounded-[2rem] glass-luxury p-7 space-y-4 float-slow">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-full bg-obsidian text-gold-light border border-gold flex items-center justify-center font-display font-bold">SJ</div>
+                <div>
+                  <strong class="text-obsidian text-sm block">Snehal Joshi</strong>
+                  <span class="text-[11px] text-mutedInk">Kannad &bull; Zero Downtime</span>
+                </div>
+              </div>
+              <button type="button" onclick="openVideoStoryModal('Snehal Joshi — Bridal Radiance Couture', 'Glass-skin luminosity with zero irritation using US-FDA Hydra-Infusion.')" class="w-10 h-10 rounded-full bg-obsidian text-gold-light border border-gold flex items-center justify-center shadow-md hover:scale-105 transition" aria-label="Play Story">
+                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+              </button>
+            </div>
+            <div class="text-gold-bronze text-xs tracking-widest">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="font-display italic text-xl text-obsidian">
+              “The Hydra-Infusion Glass Skin ritual gave me an instant luminous glow with zero downtime.”
+            </p>
+            <span class="text-[10px] uppercase tracking-widest text-gold-bronze font-semibold block">Protocol: Hydra-Infusion Glass Skin</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+          <div>
+            <span class="text-[11px] uppercase tracking-[0.22em] text-gold-bronze font-semibold block">@siyacosmodermahub</span>
+            <h2 class="font-display text-3xl sm:text-4xl text-obsidian mt-1">Sanctuary Suites, Laser Platforms &amp; Reels</h2>
+          </div>
+          <button type="button" onclick="openWhatsAppConcierge()" class="px-5 py-2.5 rounded-full bg-obsidian text-gold-light border border-gold/40 text-xs uppercase tracking-wider font-semibold transition">
+            Connect on WhatsApp &rarr;
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="rounded-2xl bg-obsidian text-white h-52 p-5 flex flex-col justify-end border border-gold/40 shadow-lg">
+            <span class="text-[10px] uppercase tracking-widest text-gold-light">Private Suite 01</span>
+            <h4 class="font-display text-xl text-white">US-FDA Triple Laser Suite</h4>
+          </div>
+
+          <div class="rounded-2xl glass-luxury h-52 p-5 flex flex-col justify-end">
+            <span class="text-[10px] uppercase tracking-widest text-gold-bronze font-semibold">Reel Highlight</span>
+            <h4 class="font-display text-xl text-obsidian">Hydra-Infusion Glass Glow</h4>
+          </div>
+
+          <div class="rounded-2xl glass-luxury h-52 p-5 flex flex-col justify-end">
+            <span class="text-[10px] uppercase tracking-widest text-gold-bronze font-semibold">Diagnostics</span>
+            <h4 class="font-display text-xl text-obsidian">Digital Dermoscopy Lab</h4>
+          </div>
+
+          <div class="rounded-2xl bg-obsidian text-white h-52 p-5 flex flex-col justify-end border border-gold/40 shadow-lg">
+            <span class="text-[10px] uppercase tracking-widest text-gold-light">Bridal Couture</span>
+            <h4 class="font-display text-xl text-white">Pre-Wedding Radiance</h4>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== 5. MULTI-STEP LUXURY APPOINTMENT BOOKING (WITH CONFETTI) ==================== -->
+  <section id="scene-booking" class="relative z-10 py-20 sm:py-28 bg-alabasterCard/70 border-t border-stoneBorder">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+
+        <!-- Left Sanctuary Contact Info -->
+        <div class="lg:col-span-5 rounded-[2rem] bg-obsidian text-ivorySilk p-8 sm:p-9 border border-gold/45 shadow-2xl space-y-6">
+          <span class="text-[11px] uppercase tracking-[0.22em] text-gold-light font-semibold block">Official Clinic Contact</span>
+          <h2 class="font-display text-3xl sm:text-4xl text-white">Siya Cosmoderma Hub Clinic</h2>
+          <p class="text-xs text-gold-light">Dr. Vaishnavi Gayake &bull; Chief Consultant</p>
+          <div class="gold-hairline w-24"></div>
+
+          <div class="space-y-4 text-sm text-ivorySilk/90">
+            <p><strong class="text-gold-light block text-xs uppercase tracking-wider">Address</strong>Shivaji Nagar, Near Ummang English School, Kannad, Tq. Kannad, Dist. Chhatrapati Sambhajinagar</p>
+            <p><strong class="text-gold-light block text-xs uppercase tracking-wider">Clinic &amp; Payment Contact</strong><a href="tel:+918390020346" class="hover:text-white font-semibold">8390020346</a></p>
+            <p><strong class="text-gold-light block text-xs uppercase tracking-wider">Email</strong>siyacosmodermahub1@gmail.com</p>
+            <p><strong class="text-gold-light block text-xs uppercase tracking-wider">Consultation Hours</strong>Mon – Sat: 10:30 AM – 2:00 PM &amp; 5:30 PM – 8:30 PM</p>
+          </div>
+        </div>
+
+        <!-- Right Multi-Step Interactive Wizard -->
+        <div class="lg:col-span-7 rounded-[2rem] bg-white border border-stoneBorder p-7 sm:p-10 shadow-xl">
+          <div class="flex items-center justify-between gap-2 mb-8 pb-4 border-b border-stoneBorder text-[10px] sm:text-xs uppercase tracking-wider font-semibold">
+            <span id="wiz-ind-1" class="text-obsidian font-bold">1. Treatment</span>
+            <span class="text-gold">&rarr;</span>
+            <span id="wiz-ind-2" class="text-mutedInk">2. Date &amp; Slot</span>
+            <span class="text-gold">&rarr;</span>
+            <span id="wiz-ind-3" class="text-mutedInk">3. Details</span>
+            <span class="text-gold">&rarr;</span>
+            <span id="wiz-ind-4" class="text-mutedInk">4. Pass</span>
+          </div>
+
+          <div id="wiz-step-1" class="space-y-5">
+            <h3 class="font-display text-2xl sm:text-3xl text-obsidian">Select Your Aesthetic or Clinical Protocol</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="wizardTreatmentCards"></div>
+            <button type="button" onclick="goWizardStep(2)" class="w-full py-4 rounded-full bg-obsidian text-gold-light border border-gold/40 text-xs font-bold uppercase tracking-[0.16em]">
+              Continue to Date &amp; Time &rarr;
+            </button>
+          </div>
+
+          <div id="wiz-step-2" class="hidden space-y-5">
+            <h3 class="font-display text-2xl sm:text-3xl text-obsidian">Choose Date &amp; Private Suite Slot</h3>
+            <div class="p-4 rounded-2xl bg-ivorySilk border border-gold/45 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] uppercase tracking-wider text-gold-bronze font-semibold block">Consulting Specialist</span>
+                <strong class="text-obsidian">Dr. Vaishnavi Gayake (Kannad Sanctuary)</strong>
+              </div>
+              <i data-lucide="badge-check" class="w-5 h-5 text-gold-bronze"></i>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-[10px] uppercase tracking-wider text-obsidian font-semibold mb-1.5">Preferred Date *</label>
+                <input type="date" id="wizDate" class="w-full px-4 py-3.5 rounded-xl bg-ivorySilk border border-stoneBorder text-obsidian text-sm" />
+              </div>
+              <div>
+                <label class="block text-[10px] uppercase tracking-wider text-obsidian font-semibold mb-1.5">Suite Time Slot *</label>
+                <select id="wizSlot" class="w-full px-4 py-3.5 rounded-xl bg-ivorySilk border border-stoneBorder text-obsidian text-sm">
+                  <option value="Morning Suite (10:30 AM – 1:30 PM)">Morning Suite (10:30 AM – 1:30 PM)</option>
+                  <option value="Afternoon Suite (2:00 PM – 5:00 PM)">Afternoon Suite (2:00 PM – 5:00 PM)</option>
+                  <option value="Evening Suite (5:30 PM – 8:30 PM)">Evening Suite (5:30 PM – 8:30 PM)</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <button type="button" onclick="goWizardStep(1)" class="px-6 py-4 rounded-full border border-stoneBorder text-xs uppercase tracking-wider font-semibold text-obsidian">Back</button>
+              <button type="button" onclick="goWizardStep(3)" class="flex-1 py-4 rounded-full bg-obsidian text-gold-light border border-gold/40 text-xs font-bold uppercase tracking-[0.16em]">Continue to Patient Details &rarr;</button>
+            </div>
+          </div>
+
+          <div id="wiz-step-3" class="hidden space-y-5">
+            <h3 class="font-display text-2xl sm:text-3xl text-obsidian">Guest &amp; Clinical Details</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-[10px] uppercase tracking-wider text-obsidian font-semibold mb-1.5">Full Name *</label>
+                <input type="text" id="wizName" placeholder="e.g., Ananya Kulkarni" class="w-full px-4 py-3.5 rounded-xl bg-ivorySilk border border-stoneBorder text-obsidian text-sm" />
+              </div>
+              <div>
+                <label class="block text-[10px] uppercase tracking-wider text-obsidian font-semibold mb-1.5">Phone / WhatsApp *</label>
+                <input type="tel" id="wizPhone" placeholder="8390020346" class="w-full px-4 py-3.5 rounded-xl bg-ivorySilk border border-stoneBorder text-obsidian text-sm" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] uppercase tracking-wider text-obsidian font-semibold mb-1.5">Skin / Hair Concern Notes</label>
+              <textarea id="wizNotes" rows="2" placeholder="Optional notes for Dr. Vaishnavi Gayake..." class="w-full px-4 py-3 rounded-xl bg-ivorySilk border border-stoneBorder text-obsidian text-sm"></textarea>
+            </div>
+            <div class="flex gap-3">
+              <button type="button" onclick="goWizardStep(2)" class="px-6 py-4 rounded-full border border-stoneBorder text-xs uppercase tracking-wider font-semibold text-obsidian">Back</button>
+              <button type="button" onclick="finalizeLuxuryBooking()" class="flex-1 py-4 rounded-full bg-obsidian text-gold-light border border-gold text-xs font-bold uppercase tracking-[0.16em] shadow-xl">
+                Confirm &amp; Generate Digital Pass
+              </button>
+            </div>
+          </div>
+
+          <div id="wiz-step-4" class="hidden space-y-6">
+            <div class="p-6 rounded-2xl bg-obsidian text-white border border-gold space-y-4">
+              <div class="flex items-center justify-between border-b border-gold/25 pb-4">
+                <div>
+                  <span class="text-[10px] uppercase tracking-[0.2em] text-gold-light block">Priority Sanctuary Pass</span>
+                  <h4 class="font-display text-2xl text-white">Reservation Confirmed</h4>
+                </div>
+                <span id="wizPassId" class="px-4 py-1.5 rounded-full bg-gold/20 border border-gold text-gold-light font-mono font-bold text-sm">#SCH-0000</span>
+              </div>
+              <div id="wizPassSummary" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-ivorySilk/90"></div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+              <button type="button" onclick="confirmPassViaWhatsApp()" class="flex-1 py-4 px-6 rounded-full bg-gold text-obsidian text-xs font-bold uppercase tracking-[0.15em] flex items-center justify-center gap-2">
+                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                <span>Send Pass on WhatsApp</span>
+              </button>
+              <a href="admin.html" class="py-4 px-6 rounded-full bg-obsidian text-gold-light border border-gold/45 text-xs font-semibold uppercase tracking-wider text-center">
+                Open Admin Portal &rarr;
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 11. FLOATING ACTION BUTTONS ==================== -->
+  <div class="fixed bottom-5 right-5 z-40 flex flex-col gap-2.5">
+    <a href="#scene-booking" title="Book Appointment" class="magnetic-btn w-12 h-12 rounded-full bg-obsidian text-gold-light border border-gold shadow-xl flex items-center justify-center">
+      <i data-lucide="calendar-plus" class="w-5 h-5"></i>
+    </a>
+    <button type="button" onclick="openWhatsAppConcierge()" title="WhatsApp Clinic" class="magnetic-btn w-12 h-12 rounded-full bg-white text-emerald-700 border border-stoneBorder hover:border-gold shadow-lg flex items-center justify-center">
+      <i data-lucide="message-circle" class="w-5 h-5"></i>
+    </button>
+    <a href="tel:+918390020346" title="Call 8390020346" class="magnetic-btn w-12 h-12 rounded-full bg-white text-obsidian border border-stoneBorder hover:border-gold shadow-lg flex items-center justify-center">
+      <i data-lucide="phone" class="w-5 h-5"></i>
+    </a>
+    <a href="https://maps.google.com/?q=Shivaji+Nagar+Kannad+Chhatrapati+Sambhajinagar" target="_blank" rel="noopener" title="Clinic Directions" class="magnetic-btn w-12 h-12 rounded-full bg-white text-sky-700 border border-stoneBorder hover:border-gold shadow-lg flex items-center justify-center">
+      <i data-lucide="navigation" class="w-5 h-5"></i>
+    </a>
+    <button type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Scroll to Top" class="magnetic-btn w-12 h-12 rounded-full bg-white text-obsidian border border-stoneBorder hover:border-gold shadow-lg flex items-center justify-center">
+      <i data-lucide="arrow-up" class="w-5 h-5"></i>
+    </button>
+  </div>
+
+  <!-- Video Story Preview Modal -->
+  <div id="videoStoryModal" class="hidden fixed inset-0 z-50 bg-obsidian/75 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="max-w-md w-full rounded-[2rem] bg-white p-7 space-y-4 border border-gold shadow-2xl">
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] uppercase tracking-widest text-gold-bronze font-semibold">Patient Story Highlight</span>
+        <button type="button" onclick="document.getElementById('videoStoryModal').classList.add('hidden')" class="text-mutedInk hover:text-obsidian">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <h3 id="videoStoryTitle" class="font-display text-2xl text-obsidian"></h3>
+      <p id="videoStoryBody" class="text-sm text-mutedInk leading-relaxed"></p>
+      <a href="#scene-booking" onclick="document.getElementById('videoStoryModal').classList.add('hidden')" class="block w-full py-3 rounded-full bg-obsidian text-gold-light border border-gold text-xs font-bold uppercase tracking-wider text-center">
+        Book Similar Consultation
+      </a>
+    </div>
+  </div>
+
+  <!-- ==================== OFFICIAL FOOTER ==================== -->
+  <footer class="relative z-10 bg-obsidian-deep text-ivorySilk/75 border-t border-gold/30 py-12 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>&copy; 2026 Siya Cosmoderma Hub Clinic &bull; Dr. Vaishnavi Gayake, Kannad. Contact: 8390020346.</p>
+      <a href="admin.html" class="text-gold-light hover:text-white font-semibold uppercase tracking-wider">Doctor &amp; Admin Rx Portal &rarr;</a>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
